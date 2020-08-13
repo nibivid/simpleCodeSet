@@ -1,0 +1,40 @@
+class VideoDuration:
+    def __init__(self,file_path):
+        #file location 
+        self.file_path=file_path
+        self.total_duration=0
+    def call(self):
+        for root,dirs,file in os.walk(self.file_path):
+            try:
+                for each_file in file :
+                    type=str(each_file[-3:])
+                    if type=="mp4":
+       
+                        print(" -> "+str(format_bytes(os.path.getsize(os.path.join(root, each_file))))+" "+str(each_file) )
+                        clip = VideoFileClip(os.path.join(root, each_file))
+                        self.total_duration+=clip.duration
+            except FileNotFoundError:
+                print("Wrong file or file path")
+        print(convert(self.total_duration))
+    
+    def format_bytes(size):
+        # 2**10 = 1024
+        power = 2**10
+        n = 0
+        power_labels = {0 : '', 1: 'kilo', 2: 'mega', 3: 'giga', 4: 'tera'}
+        while size > power:
+            size /= power
+            n += 1
+        return size, power_labels[n]+'bytes'
+
+
+
+    def convert(seconds): 
+        seconds = seconds % (24 * 3600) 
+        hour = seconds // 3600
+        seconds %= 3600
+        minutes = seconds // 60
+        seconds %= 60
+
+        return "%d:%02d:%02d" % (hour, minutes, seconds) 
+        
